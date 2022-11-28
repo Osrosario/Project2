@@ -95,10 +95,10 @@ public class SelectionMaster : MonoBehaviour
         {
             for (var i = 0; i < PlayerOneSO.UnitList.Count; i++)
             {
-                if (PlayerOneSO.UnitList[i].name == "Sword") { swordCount++; }
-                if (PlayerOneSO.UnitList[i].name == "Archer") { archerCount++; }
-                if (PlayerOneSO.UnitList[i].name == "Berserker") { berserkerCount++; }
-                if (PlayerOneSO.UnitList[i].name == "Mage") { mageCount++; }
+                if (PlayerOneSO.UnitList[i].name == "W_Sword") { swordCount++; }
+                if (PlayerOneSO.UnitList[i].name == "W_Archer") { archerCount++; }
+                if (PlayerOneSO.UnitList[i].name == "W_Berserker") { berserkerCount++; }
+                if (PlayerOneSO.UnitList[i].name == "W_Mage") { mageCount++; }
             }
 
             P1_SwordCount.text = "x" + swordCount.ToString();
@@ -110,10 +110,10 @@ public class SelectionMaster : MonoBehaviour
         {
             for (var i = 0; i < PlayerTwoSO.UnitList.Count; i++)
             {
-                if (PlayerTwoSO.UnitList[i].name == "Sword") { swordCount++; }
-                if (PlayerTwoSO.UnitList[i].name == "Archer") { archerCount++; }
-                if (PlayerTwoSO.UnitList[i].name == "Berserker") { berserkerCount++; }
-                if (PlayerTwoSO.UnitList[i].name == "Mage") { mageCount++; }
+                if (PlayerTwoSO.UnitList[i].name == "B_Sword") { swordCount++; }
+                if (PlayerTwoSO.UnitList[i].name == "B_Archer") { archerCount++; }
+                if (PlayerTwoSO.UnitList[i].name == "B_Berserker") { berserkerCount++; }
+                if (PlayerTwoSO.UnitList[i].name == "B_Mage") { mageCount++; }
             }
 
             P2_SwordCount.text = "x" + swordCount.ToString();
