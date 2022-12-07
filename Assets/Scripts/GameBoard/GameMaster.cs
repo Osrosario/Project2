@@ -16,16 +16,16 @@ public class GameMaster : MonoBehaviour
 
     private string playerToGoFirst;
     private string playerTurn;
-    private bool hasSecondPlayerGone;
-    private int index;
+    private int aIndex;
+    private int bIndex;
     private string gameState;
     private int unitCount;
     private int unitsPlaced;
-
+    
     private void Awake()
     {
-        hasSecondPlayerGone = false;
-        index = 0;
+        aIndex = 0;
+        bIndex = 0;
         gameState = "prep";
         unitCount = P1UnitList.Count + P2UnitList.Count;
         unitsPlaced = 0;
@@ -41,8 +41,8 @@ public class GameMaster : MonoBehaviour
             Cursor.SetPosition(3, 7);
             Cursor.SetGameState(gameState);
             Cursor.SetPlayerTurn(playerTurn);
-            Cursor.SendUnit(P1UnitList[index]);
-            index++;
+            Cursor.SendUnit(P1UnitList[aIndex]);
+            aIndex++;
         }
         else
         {
@@ -51,8 +51,8 @@ public class GameMaster : MonoBehaviour
             Cursor.SetPosition(4, 0);
             Cursor.SetGameState(gameState);
             Cursor.SetPlayerTurn(playerTurn);
-            Cursor.SendUnit(P2UnitList[index]);
-            index++;
+            Cursor.SendUnit(P2UnitList[bIndex]);
+            bIndex++;
         }
     }
 
@@ -60,36 +60,24 @@ public class GameMaster : MonoBehaviour
     {
         if (playerTurn == "P1")
         {
-            if (index < P1UnitList.Count)
+            if (bIndex < P2UnitList.Count)
             {
-                Cursor.SendUnit(P1UnitList[index]);
-                index++;
-            }
-            else if (index >= P1UnitList.Count && !hasSecondPlayerGone)
-            {
-                index = 0;
+                Cursor.SendUnit(P2UnitList[bIndex]);
                 Cursor.SetPosition(4, 0);
                 playerTurn = "P2";
                 Cursor.SetPlayerTurn(playerTurn);
-                hasSecondPlayerGone = true;
-                RequestUnit();
+                bIndex++;
             }
         }
         else
         {
-            if (index < P2UnitList.Count)
+            if (aIndex < P1UnitList.Count)
             {
-                Cursor.SendUnit(P2UnitList[index]);
-                index++;
-            }
-            else if (index >= P2UnitList.Count && !hasSecondPlayerGone)
-            {
-                index = 0;
+                Cursor.SendUnit(P1UnitList[aIndex]);
                 Cursor.SetPosition(3, 7);
                 playerTurn = "P1";
                 Cursor.SetPlayerTurn(playerTurn);
-                hasSecondPlayerGone = true;
-                RequestUnit();
+                aIndex++;
             }
         }
 

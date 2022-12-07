@@ -18,6 +18,9 @@ TagManager:
   - Mage
   - P1
   - P2
+  - Tile
+  - Cursor1
+  - Cursor2
   layers:
   - Default
   - TransparentFX

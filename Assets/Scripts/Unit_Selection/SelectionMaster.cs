@@ -23,12 +23,39 @@ public class SelectionMaster : MonoBehaviour
     public TMP_Text P2_BerserkerCount;
     public TMP_Text P2_MageCount;
 
+    [Header("Notification Window Objects")]
+    public GameObject playerOneNoti1;
+    public GameObject playerTwoNoti1;
+
+    [Header("Player Buttons")]
+    public Button playerOneButton;
+    public Button playerTwoButton;
+
     [Header("Done and Start Buttons")]
     public Button doneButton;
     public Button startButton;
 
     private bool isP1Done = false;
     private int thisScene = 0;
+
+    private void Start()
+    {
+        int diceRoll = Random.Range(1, 7);
+
+        if (diceRoll >= 1 && diceRoll <= 3)
+        {
+            isP1Done = false;
+        }
+        else
+        {
+            isP1Done = true;
+        }
+
+        playerOneButton.interactable = false;
+        playerTwoButton.interactable = false;
+
+        StartCoroutine(Notify());
+    }
 
     public void AddUnit(GameObject unit)
     {
@@ -46,6 +73,10 @@ public class SelectionMaster : MonoBehaviour
             if (count < 2)
             {
                 PlayerOneSO.UnitList.Add(unit);
+                
+                AdjustCount();
+                CheckLength();
+                isP1Done = true;
             }
         }
         else
@@ -62,11 +93,12 @@ public class SelectionMaster : MonoBehaviour
             if (count < 2)
             {
                 PlayerTwoSO.UnitList.Add(unit);
+
+                AdjustCount();
+                CheckLength();
+                isP1Done = false;
             }
         }
-
-        AdjustCount();
-        CheckLength();
     }
 
     public void RemoveUnit(GameObject unit)
@@ -125,34 +157,21 @@ public class SelectionMaster : MonoBehaviour
 
     private void CheckLength()
     {
-        if (!isP1Done)
+        if (PlayerOneSO.UnitList.Count == 6 && PlayerTwoSO.UnitList.Count == 6)
         {
-            if (PlayerOneSO.UnitList.Count == 2)
-            {
-                doneButton.interactable = true;
-            }
-            else
-            {
-                doneButton.interactable = false;
-            }
+            startButton.interactable = true;
+            playerOneButton.interactable = true;
+            playerTwoButton.interactable = true;
         }
         else
         {
-            if (PlayerTwoSO.UnitList.Count == 2)
-            {
-                startButton.interactable = true;
-            }
-            else
-            {
-                startButton.interactable = false;
-            }
+            startButton.interactable = false;
         }
     }
     
-    public void ChangeTurn()
+    public void ChangePicker(bool value)
     {
-        isP1Done = true;
-        doneButton.interactable = false;
+        isP1Done = value;
     }
 
     public bool SendBool()
@@ -170,6 +189,22 @@ public class SelectionMaster : MonoBehaviour
         if (thisScene != 0)
         {
             SceneManager.LoadScene(thisScene);
+        }
+    }
+
+    IEnumerator Notify()
+    {
+        if (!isP1Done)
+        {
+            playerOneNoti1.SetActive(true);
+            yield return new WaitForSeconds(2);
+            playerOneNoti1.SetActive(false);
+        }
+        else
+        {
+            playerTwoNoti1.SetActive(true);
+            yield return new WaitForSeconds(2);
+            playerTwoNoti1.SetActive(false);
         }
     }
 }

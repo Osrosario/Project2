@@ -4,27 +4,42 @@ using UnityEngine;
 
 public class NavigationMap : MonoBehaviour
 {
-    public List<List<Transform>> Map = new List<List<Transform>>();
-    public Transform[] tileTranforms;
-    
+    public List<List<Tile>> Map = new List<List<Tile>>();
+    public Tile[] tiles;
+
     private void Awake()
     {
-        tileTranforms = GetComponentsInChildren<Transform>();
+        tiles = GetComponentsInChildren<Tile>();
 
-        int index = 1;
+        int index = 0;
 
         for (int x = 0; x < 8; x++)
         {
-            Map.Add(new List<Transform>());
+            Map.Add(new List<Tile>());
 
             for (int y = 0; y < 8; y++)
             {
-                Transform transformOfTile = tileTranforms[index];
-                Map[x].Add(transformOfTile);
+                Tile tile = tiles[index];
+                tile.SetCoords(x, y);
+                Map[x].Add(tile);
                 index++;
             }
         } 
     }
 
-    public List<List<Transform>> GetMap() { return Map; }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    Debug.Log(Map[x][y].UnitOnTile);
+                }
+            }
+        }
+    }
+
+    public List<List<Tile>> GetMap() { return Map; }
 }

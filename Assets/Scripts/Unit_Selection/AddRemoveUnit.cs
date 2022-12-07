@@ -7,7 +7,7 @@ public class AddRemoveUnit : MonoBehaviour
     [Header("Scripts from Selection Master")]
     public SelectionMaster SelectionMaster;
     
-    [Header("Sword Unit Objects")]
+    [Header("Unit Objects")]
     public GameObject WhiteUnit;
     public GameObject BlackUnit;
 

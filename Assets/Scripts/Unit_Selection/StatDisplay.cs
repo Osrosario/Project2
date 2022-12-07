@@ -18,10 +18,14 @@ public class StatDisplay : MonoBehaviour
     public TMP_Text PassiveDesc;
 
     [Header("ATK Point Image Objects from Stat Window")]
-    public GameObject FrontImage;
-    public GameObject BackImage;
-    public GameObject LeftImage;
-    public GameObject RightImage;
+    public GameObject FrontImage1;
+    public GameObject FrontImage2;
+    public GameObject BackImage1;
+    public GameObject BackImage2;
+    public GameObject LeftImage1;
+    public GameObject LeftImage2;
+    public GameObject RightImage1;
+    public GameObject RightImage2;
 
     private Stats unitStats;
 
@@ -39,9 +43,13 @@ public class StatDisplay : MonoBehaviour
         MovementValue.text = unitStats.GetMovement().ToString();
         PassiveDesc.text = unitStats.GetPassive();
 
-        FrontImage.GetComponent<Image>().color = unitStats.GetFront().GetComponent<Renderer>().sharedMaterial.color;
-        BackImage.GetComponent<Image>().color = unitStats.GetBack().GetComponent<Renderer>().sharedMaterial.color;
-        LeftImage.GetComponent<Image>().color = unitStats.GetLeft().GetComponent<Renderer>().sharedMaterial.color;
-        RightImage.GetComponent<Image>().color = unitStats.GetRight().GetComponent<Renderer>().sharedMaterial.color;
+        FrontImage1.GetComponent<Image>().color = unitStats.GetFront().GetComponent<Renderer>().sharedMaterial.color;
+        FrontImage2.GetComponent<Image>().color = unitStats.GetFront().GetComponent<Renderer>().sharedMaterial.color;
+        BackImage1.GetComponent<Image>().color = unitStats.GetBack().GetComponent<Renderer>().sharedMaterial.color;
+        BackImage2.GetComponent<Image>().color = unitStats.GetBack().GetComponent<Renderer>().sharedMaterial.color;
+        LeftImage1.GetComponent<Image>().color = unitStats.GetLeft().GetComponent<Renderer>().sharedMaterial.color;
+        LeftImage2.GetComponent<Image>().color = unitStats.GetLeft().GetComponent<Renderer>().sharedMaterial.color;
+        RightImage1.GetComponent<Image>().color = unitStats.GetRight().GetComponent<Renderer>().sharedMaterial.color;
+        RightImage2.GetComponent<Image>().color = unitStats.GetRight().GetComponent<Renderer>().sharedMaterial.color;
     }
 }

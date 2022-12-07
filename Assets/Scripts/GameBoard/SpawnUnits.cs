@@ -16,7 +16,7 @@ public class SpawnUnits : MonoBehaviour
     public Vector3 P2_StartPos;
 
     private GameObject thisUnit;
-
+    
     private void Awake()
     {
         transform.position = P1_StartPos;
@@ -43,8 +43,9 @@ public class SpawnUnits : MonoBehaviour
                     break;
             }
 
-            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1.25f);
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1f);
             thisUnit.tag = "P1";
+            thisUnit.GetComponent<Stats>().SetFace("North");
             GameMaster.AddToP1(thisUnit);
         }
 
@@ -73,8 +74,9 @@ public class SpawnUnits : MonoBehaviour
                     break;
             }
 
-            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1.25f);
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1f);
             thisUnit.tag = "P2";
+            thisUnit.GetComponent<Stats>().SetFace("South");
             GameMaster.AddToP2(thisUnit);
         }
     }

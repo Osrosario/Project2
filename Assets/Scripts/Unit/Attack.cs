@@ -7,57 +7,21 @@ public class Attack : MonoBehaviour
     [Header("Script from the Parent Object")]
     public Stats unitStats;
 
-    [Header("Attack Range")]
-    public float RayCastDistance;
+    private int enemyPointModifier;
 
-    private GameObject pointOfATK;
-    private List<string> pointList = new List<string> { "Weak", "Neutral", "Strong" };
-
-    public bool CanAttack()
+    public void AttackUnit(Tile enemytile)
     {
-        RaycastHit hit;
+        Stats enemyStats = enemytile.UnitOnTile.GetComponent<Stats>();
+        string unitFace = GetComponentInParent<Stats>().GetFace();
 
-        bool unitInRange = Physics.Raycast(transform.position, transform.forward, out hit, RayCastDistance);
-
-        if (unitInRange)
-        {
-            if (pointList.Contains(hit.collider.tag))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
+        pointModifier(enemyStats, unitFace);
+        Battle(enemyStats);
     }
 
-    public void AttackUnit()
+    private void Battle(Stats enemyStats)
     {
-        RaycastHit hit;
-
-        if (Physics.Raycast(transform.position, transform.forward, out hit, RayCastDistance))
-        {
-            GameObject hitPoint = hit.collider.gameObject;
-
-            if (hitPoint != null)
-            {
-                pointOfATK = hitPoint;
-                Battle();
-            }
-        }
-    }
-
-    private void Battle()
-    {
-        Stats enemyStats = pointOfATK.GetComponentInParent<Stats>();
-        int enemyATK = pointOfATK.GetComponentInParent<Stats>().GetATK();
-        int enemyPointModifier = pointOfATK.GetComponent<AttackPoint>().GetModifer();
-        int enemyTerrainBuff = pointOfATK.GetComponentInParent<Stats>().TerrainBuff();
+        int enemyATK = enemyStats.GetComponentInParent<Stats>().GetATK();
+        int enemyTerrainBuff = enemyStats.GetComponentInParent<Stats>().TerrainBuff();
         
         int unitATK = GetComponentInParent<Stats>().GetATK();
         int unitTerrainModifier = unitStats.TerrainBuff();
@@ -65,7 +29,8 @@ public class Attack : MonoBehaviour
         Debug.Log($"Enemy ATK: {enemyATK}" +
                   $"\nEnemy Point Modifer: {enemyPointModifier}" +
                   $"\nEnemy Terrain Buff: {enemyTerrainBuff}" +
-                  $"\nUnit ATK: {unitATK}");
+                  $"\nUnit ATK: {unitATK}"+
+                  $"\nUnit Terrain Buff: {unitTerrainModifier}");
 
 
         int damage = (unitATK + unitTerrainModifier) - (enemyATK + enemyTerrainBuff + enemyPointModifier);
@@ -74,32 +39,46 @@ public class Attack : MonoBehaviour
 
         if (damage < 0)
         {
-            unitStats.SetHP(Mathf.Abs(damage));
+            unitStats.TakeDamage(Mathf.Abs(damage));
             Debug.Log($"This Unit attacked.\nIt received {Mathf.Abs(damage)}");
         }
         else
         {
-            enemyStats.SetHP(damage);
+            enemyStats.TakeDamage(damage);
             Debug.Log($"This Unit attacked.\nIt dealt {damage}");
         }
     }
 
-    private void OnDrawGizmos()
+    private int pointModifier(Stats enemyStats, string unitFace)
     {
-        RaycastHit hit;
+        string enemyFace = enemyStats.GetFace();
 
-        bool isHit = Physics.Raycast(transform.position, transform.forward, out hit, RayCastDistance);
+        if (unitFace == enemyFace)
+        {
+            enemyPointModifier = enemyStats.pointModfiers["Back"];
+        }
+        else if ((unitFace == "North" && enemyFace == "South") || 
+                 (unitFace == "South" && enemyFace == "North") ||
+                 (unitFace == "West" && enemyFace == "East")   || 
+                 (unitFace == "East" && enemyFace == "West"))
+        {
+            enemyPointModifier = enemyStats.pointModfiers["Front"];
+        }
+        else if ((unitFace == "North" && enemyFace == "West") ||
+                 (unitFace == "South" && enemyFace == "East") ||
+                 (unitFace == "West" && enemyFace == "South") ||
+                 (unitFace == "East" && enemyFace == "North"))
+        {
+            enemyPointModifier = enemyStats.pointModfiers["Left"];
+        }
+        else if ((unitFace == "North" && enemyFace == "East") ||
+                 (unitFace == "South" && enemyFace == "West") ||
+                 (unitFace == "West" && enemyFace == "North") ||
+                 (unitFace == "East" && enemyFace == "South"))
+        {
+            enemyPointModifier = enemyStats.pointModfiers["Right"];
+        }
 
-        if (isHit)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(transform.position, transform.forward * hit.distance);
-            //Debug.Log(hit.collider.tag);
-        }
-        else
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawRay(transform.position, transform.forward * RayCastDistance);
-        }
+        return enemyPointModifier;
     }
 }
