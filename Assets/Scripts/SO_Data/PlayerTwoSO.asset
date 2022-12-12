@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: PlayerTwoSO
   m_EditorClassIdentifier: 
   unitList:
-  - {fileID: 7669247558837014299, guid: f8a5cbbe507c6cc4e96d8ac57fc4be2f, type: 3}
   - {fileID: 5251084141594896374, guid: 42652cf3cbc20d74eb0e5c7a2780e3c8, type: 3}
-  - {fileID: 6345525498341758276, guid: afc422f7b12ad494ab78e3f714188d0c, type: 3}
+  - {fileID: 5251084141594896374, guid: 42652cf3cbc20d74eb0e5c7a2780e3c8, type: 3}
   - {fileID: 1295930929778156361, guid: 63bcbdaeef2c5424b8bcadff8ef5c7df, type: 3}
-  - {fileID: 7669247558837014299, guid: f8a5cbbe507c6cc4e96d8ac57fc4be2f, type: 3}
+  - {fileID: 1295930929778156361, guid: 63bcbdaeef2c5424b8bcadff8ef5c7df, type: 3}
+  - {fileID: 6345525498341758276, guid: afc422f7b12ad494ab78e3f714188d0c, type: 3}
   - {fileID: 6345525498341758276, guid: afc422f7b12ad494ab78e3f714188d0c, type: 3}
