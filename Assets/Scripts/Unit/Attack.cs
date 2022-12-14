@@ -12,7 +12,7 @@ public class Attack : MonoBehaviour
     public void AttackUnit(Tile enemytile)
     {
         Stats enemyStats = enemytile.UnitOnTile.GetComponent<Stats>();
-        string unitFace = GetComponentInParent<Stats>().GetFace();
+        string unitFace = GetComponent<Stats>().GetFace();
 
         pointModifier(enemyStats, unitFace);
         Battle(enemyStats);
@@ -20,18 +20,22 @@ public class Attack : MonoBehaviour
 
     private void Battle(Stats enemyStats)
     {
-        int enemyATK = enemyStats.GetComponentInParent<Stats>().GetATK();
-        int enemyTerrainBuff = enemyStats.GetComponentInParent<Stats>().TerrainBuff();
-        
-        int unitATK = GetComponentInParent<Stats>().GetATK();
+        string enemyName = enemyStats.GetComponent<Stats>().GetClass();
+        int enemyATK = enemyStats.GetComponent<Stats>().GetATK();
+        int enemyTerrainBuff = enemyStats.GetComponent<Stats>().TerrainBuff();
+
+        string unitName = unitStats.GetClass();
+        int unitATK = unitStats.GetATK();
         int unitTerrainModifier = unitStats.TerrainBuff();
 
-        Debug.Log($"Enemy ATK: {enemyATK}" +
+        Debug.Log($"Enemy Name: {enemyName}" +
+                  $"Enemy ATK: {enemyATK}" +
                   $"\nEnemy Point Modifer: {enemyPointModifier}" +
-                  $"\nEnemy Terrain Buff: {enemyTerrainBuff}" +
-                  $"\nUnit ATK: {unitATK}"+
-                  $"\nUnit Terrain Buff: {unitTerrainModifier}");
+                  $"\nEnemy Terrain Buff: {enemyTerrainBuff}");
 
+        Debug.Log($"Unit Name: {enemyName}" +
+                  $"Unit ATK: {enemyATK}" +
+                  $"\nEnemy Terrain Buff: {unitTerrainModifier}");
 
         int damage = (unitATK + unitTerrainModifier) - (enemyATK + enemyTerrainBuff + enemyPointModifier);
 

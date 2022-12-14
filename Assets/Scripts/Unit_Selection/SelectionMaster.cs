@@ -32,7 +32,6 @@ public class SelectionMaster : MonoBehaviour
     public Button playerTwoButton;
 
     [Header("Done and Start Buttons")]
-    public Button doneButton;
     public Button startButton;
 
     private bool isP1Done = false;
@@ -40,6 +39,9 @@ public class SelectionMaster : MonoBehaviour
 
     private void Start()
     {
+        PlayerOneSO.UnitList.Clear();
+        PlayerTwoSO.UnitList.Clear();
+
         int diceRoll = Random.Range(1, 7);
 
         if (diceRoll >= 1 && diceRoll <= 3)

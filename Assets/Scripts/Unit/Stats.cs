@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Stats : MonoBehaviour
 {
+    [Header("Unit Image")]
+    public Sprite UnitImage;
+    
     [Header("Stats")]
     public string Class;
     public int HP;
@@ -25,7 +29,8 @@ public class Stats : MonoBehaviour
     public GameObject CubeRight;
 
     public Dictionary<string, int> pointModfiers = new Dictionary<string, int>();
-    private int terrainBuff;
+    public int terrainBuff;
+    public int ID;
     private string facing;
 
     private void Awake()
@@ -52,22 +57,12 @@ public class Stats : MonoBehaviour
         else if (tile == "Mountain") { terrainBuff = 3; }
     }
 
-    public int TerrainBuff()
-    {
-        return terrainBuff;
-    }
-
-    public void SetFace(string face)
-    {
-        facing = face;
-    }
-
-    public string GetFace()
-    {
-        return facing;
-    }
-
+    public int TerrainBuff() { return terrainBuff; }
+    public void SetID(int num) { ID = num; }
+    public void SetFace(string face) { facing = face; }
+    public string GetFace() { return facing; }
     public string GetClass() { return Class; }
+    public Sprite GetImage() { return UnitImage; }
     public void TakeDamage(int damage) { HP -= damage; }
     public int GetHP() { return HP; }
     public int GetATK() { return ATK; }

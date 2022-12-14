@@ -13,12 +13,12 @@ public class Cursor : MonoBehaviour
     public GameMaster GameMaster;
 
     [Header("Stat Window Objects")]
-    public GameObject playerOneStats;
-    public GameObject playerTwoStats;
+    public GameObject StatsWindow1;
+    public GameObject StatsWindow2;
 
     [Header("Notification Window Objects")]
-    public GameObject playerOneNoti1;
-    public GameObject playerTwoNoti1;
+    public GameObject NotifWindow1;
+    public GameObject NotifWindow2;
 
     [Header("Highlight for Notification Window Objects")]
     public GameObject playerOneBorder;
@@ -35,8 +35,11 @@ public class Cursor : MonoBehaviour
 
     //Persistant Data
     private string gameState;
+
     private string playerTurn;
     List<Tile> rangeList = new List<Tile>();
+    private DisplayStats displayStats1;
+    private DisplayStats displayStats2;
 
     //Map Navigation Data
     private List<List<Tile>> navMap = new List<List<Tile>>();
@@ -47,18 +50,19 @@ public class Cursor : MonoBehaviour
     private int PrevXIndex;
     private int PrevYIndex;
     private float adjustOnTop;
-    private bool moveDisabled;
+    private bool moveDisabled = false;
 
     //Selected Unit Data
     private GameObject selectedUnit;
-    private bool isUnitSelected;
-    private bool isUnitPlaced;
+    private bool isUnitSelected = false;
+    private bool isUnitPlaced  = false;
     private int UnitXIndex;
     private int UnitYIndex;
     private int unitMaxMove;
-    private int unitsToMove;
+    private int unitsToMove = 2;
     private Attack unitWeapon;
-    private bool canAttack;
+    private bool canAttack = false;
+    private bool isPreviewOn = false;
     private Tile enemyTile;
     
     //Modifed Breadth-First-Search Data
@@ -69,12 +73,8 @@ public class Cursor : MonoBehaviour
     private void Awake()
     {
         navMap = NavMap.GetMap();
-        moveDisabled = false;
-        isUnitSelected = false;
-        isUnitPlaced = false;
-        unitsToMove = 2;
-        canAttack = false;
-
+        displayStats1 = StatsWindow1.GetComponent<DisplayStats>();
+        displayStats2 = StatsWindow2.GetComponent<DisplayStats>();
         tiles = GameObject.FindGameObjectsWithTag("Tile");
     }
 
@@ -90,55 +90,70 @@ public class Cursor : MonoBehaviour
             NavigateMap();
         }
 
-        if (gameState == "prep")
+        if (gameState == "Prep")
         {
-            if (playerTurn == "P1")
-            {
-                playerOneBorder.SetActive(true);
-                playerOneBorder.GetComponentInChildren<Image>().color = Color.yellow;
-                playerTwoBorder.SetActive(false);
-            }
-            else
-            {
-                playerTwoBorder.SetActive(true);
-                playerTwoBorder.GetComponentInChildren<Image>().color = Color.yellow;
-                playerOneBorder.SetActive(false);
-            }
-
-            DiKeysText.text = "Move";
-            SpacebarText.text = "Select";
-            AKeyText.text = "-";
-            SKeyText.text = "-";
+            changeText("Move", "Select", "-", "-");
 
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 if (navMap[CurrYIndex][CurrXIndex].UnitOnTile == null)
                 {
                     initialPlacement();
+                    StartCoroutine(Notify());
                 }
             }
         }
-        else if (gameState == "play")
+        else if (gameState == "Play")
         {
-            if (Input.GetKeyUp(KeyCode.S) && !moveDisabled)
+            if (Input.GetKeyUp(KeyCode.S) && !isPreviewOn)
             {
-                viewUnitData();
+                changeText("-", "-", "-", "unselect");
+                previewOn();
+            }
+            else if (Input.GetKeyUp(KeyCode.S) && isPreviewOn)
+            {
+                changeText("Move", "Select", "-", "Preview");
+                previewOff();
+            }
 
-                DiKeysText.text = "-";
-                SpacebarText.text = "-";
-                AKeyText.text = "-";
-                SKeyText.text = "Unselect";
-            }
-            else if (Input.GetKeyUp(KeyCode.S) && moveDisabled)
+            if (!isUnitSelected && !isUnitPlaced && !isPreviewOn)
             {
-                hideUnitData();
+                changeText("Move", "Select", "-", "Preview");
+
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    selectUnit();
+                }
             }
-            else if (isUnitSelected && isUnitPlaced)
+            else if (isUnitSelected && !isUnitPlaced && !isPreviewOn)
             {
-                DiKeysText.text = "Rotate";
-                SpacebarText.text = "End Unit Turn";
-                AKeyText.text = "-";
-                SKeyText.text = "-";
+                changeText("Move", "Place", "-", "Unselect");
+                ShowAttackRange();
+                showUnitStats(selectedUnit);
+
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    confirmPlacement();
+                }
+
+                if (Input.GetKeyUp(KeyCode.S))
+                {
+                    unselectUnit();
+                }
+            }
+            else if (isUnitSelected && isUnitPlaced && !isPreviewOn)
+            {
+                ShowAttackRange();
+                showUnitStats(selectedUnit);
+                
+                if (!canAttack)
+                {
+                    changeText("Rotate", "End Unit Turn", "-", "-");
+                }
+                else
+                {
+                    changeText("Rotate", "End Unit Turn", "Attack", "-");
+                }
 
                 if (Input.GetKeyUp(KeyCode.UpArrow))
                 {
@@ -156,86 +171,16 @@ public class Cursor : MonoBehaviour
                 {
                     turnUnit(90f, "East");
                 }
-                else if (Input.GetKeyUp(KeyCode.Space))
+
+                if (Input.GetKeyUp(KeyCode.Space))
                 {
                     endUnitTurn();
                 }
 
-                if (canAttack)
+                if (Input.GetKeyUp(KeyCode.A) && canAttack)
                 {
-                    DiKeysText.text = "Rotate";
-                    SpacebarText.text = "End Unit Turn";
-                    AKeyText.text = "Attack";
-                    SKeyText.text = "-";
-
-                    if (Input.GetKeyUp(KeyCode.A))
-                    {
-                        unitWeapon.AttackUnit(enemyTile);
-                        endUnitTurn();
-                    }
-                }
-                else
-                {
-                    DiKeysText.text = "Rotate";
-                    SpacebarText.text = "End Unit Turn";
-                    AKeyText.text = "-";
-                    SKeyText.text = "-";
-                }
-            }
-            else if (isUnitSelected)
-            {
-                DiKeysText.text = "Move";
-                SpacebarText.text = "Select";
-                AKeyText.text = "-";
-                SKeyText.text = "Unselect";
-
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    confirmPlacement();
-                }
-
-                if (Input.GetKeyUp(KeyCode.Z))
-                {
-                    unselectUnit();
-                }
-            }
-            else if (!isUnitSelected && !moveDisabled)
-            {
-                DiKeysText.text = "Move";
-                SpacebarText.text = "Select";
-                AKeyText.text = "-";
-                SKeyText.text = "Preview";
-
-                if (playerTurn == "P1")
-                {
-                    playerOneStats.GetComponent<DisplayStats>().ClearInfo();
-                    playerOneStats.SetActive(false);
-                }
-                else
-                {
-                    playerTwoStats.GetComponent<DisplayStats>().ClearInfo();
-                    playerTwoStats.SetActive(false);
-                }
-
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    selectUnit();
-                }
-            }
-
-            if (isUnitSelected)
-            {
-                ShowAttackRange();
-
-                if (playerTurn == "P1")
-                {
-                    playerOneStats.GetComponent<DisplayStats>().ShowInfo(selectedUnit.GetComponent<Stats>(), navMap[CurrYIndex][CurrXIndex].name);
-                    playerOneStats.SetActive(true);
-                }
-                else
-                {
-                    playerTwoStats.GetComponent<DisplayStats>().ShowInfo(selectedUnit.GetComponent<Stats>(), navMap[CurrYIndex][CurrXIndex].name);
-                    playerTwoStats.SetActive(true);
+                    unitWeapon.AttackUnit(enemyTile);
+                    endUnitTurn();
                 }
             }
 
@@ -245,16 +190,17 @@ public class Cursor : MonoBehaviour
             {
                 if (playerTurn == "P1")
                 {
-                    SwitchTurn();
+                    playerTurn = "P2";
+                    StartCoroutine(Notify());
                 }
                 else
                 {
-                    SwitchTurn();
+                    playerTurn = "P1";
+                    StartCoroutine(Notify());
                 }
 
                 unitsToMove = 2;
             }
-
         }
     }
 
@@ -270,7 +216,7 @@ public class Cursor : MonoBehaviour
 
     private void selectUnit()
     {
-        if (navMap[CurrYIndex][CurrXIndex].UnitOnTile.tag == playerTurn)
+        if (navMap[CurrYIndex][CurrXIndex].UnitOnTile.tag == playerTurn && navMap[CurrYIndex][CurrXIndex].IsUnitOnTile)
         {
             prevPos = transform.position;
             selectedUnit = navMap[CurrYIndex][CurrXIndex].UnitOnTile;
@@ -294,8 +240,8 @@ public class Cursor : MonoBehaviour
             navMap[UnitYIndex][UnitXIndex].IsUnitOnTile = true;
             unitMaxMove = 0;
             unitWeapon = null;
-            isUnitSelected = false;
             selectedUnit = DummyObject;
+            isUnitSelected = false;
             hideUnitRange();
             refreshATKRange();
         }
@@ -324,16 +270,17 @@ public class Cursor : MonoBehaviour
     {
         refreshATKRange();
         hideUnitRange();
+        hideUnitStats("all");
 
         if (playerTurn == "P1")
         {
-            playerOneStats.SetActive(false);
-            playerOneStats.GetComponent<DisplayStats>().ClearInfo();
+            StatsWindow1.SetActive(false);
+            displayStats1.ClearInfo();
         }
         else
         {
-            playerTwoStats.SetActive(false);
-            playerTwoStats.GetComponent<DisplayStats>().ClearInfo();
+            StatsWindow2.SetActive(false);
+            displayStats2.ClearInfo();
         }
 
         selectedUnit = DummyObject;
@@ -500,18 +447,55 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    private void refreshATKRange()
+    private void showUnitStats(GameObject unit)
     {
-        if (rangeList.Count > 0)
+        string unitTag = unit.tag;
+
+        if (unitTag == "P1")
         {
-            foreach (Tile tile in rangeList)
-            {
-                tile.unitLooking = false;
-            }
+            StatsWindow1.SetActive(true);
+            displayStats1.ShowInfo(unit.GetComponent<Stats>(), navMap[CurrYIndex][CurrXIndex].name);
+            
+        }
+        else
+        {
+            StatsWindow2.SetActive(true);
+            displayStats2.ShowInfo(unit.GetComponent<Stats>(), navMap[CurrYIndex][CurrXIndex].name);
         }
     }
 
-    private void viewUnitData()
+    private void hideUnitStats(string type)
+    {
+        if (type == "self" && playerTurn == "P1")
+        {
+            displayStats1.ClearInfo();
+            StatsWindow1.SetActive(false);
+        }
+        else if (type == "self" && playerTurn == "P2")
+        {
+            displayStats2.ClearInfo();
+            StatsWindow2.SetActive(false);
+        }
+        else if (type == "enemy" && playerTurn == "P1")
+        {
+            displayStats2.ClearInfo();
+            StatsWindow2.SetActive(false);
+        }
+        else if (type == "enemy" && playerTurn == "P2")
+        {
+            displayStats1.ClearInfo();
+            StatsWindow1.SetActive(false);
+        }
+        else if (type == "all")
+        {
+            displayStats1.ClearInfo();
+            StatsWindow1.SetActive(false);
+            displayStats2.ClearInfo();
+            StatsWindow2.SetActive(false);
+        }
+    }
+
+    private void previewOn()
     {
         if (navMap[CurrYIndex][CurrXIndex].UnitOnTile != null)
         {
@@ -524,31 +508,34 @@ public class Cursor : MonoBehaviour
 
             if (unitTag == "P1")
             {
-                playerOneStats.GetComponent<DisplayStats>().ShowInfo(selectedUnit.GetComponent<Stats>(), navMap[CurrYIndex][CurrXIndex].name);
-                playerOneStats.SetActive(true);
-            }
+                StatsWindow1.SetActive(true);
+                displayStats1.ShowInfo(selectedUnit.GetComponent<Stats>(), navMap[CurrYIndex][CurrXIndex].name);            }
             else
             {
-                playerTwoStats.GetComponent<DisplayStats>().ShowInfo(selectedUnit.GetComponent<Stats>(), navMap[CurrYIndex][CurrXIndex].name);
-                playerTwoStats.SetActive(true);
+                StatsWindow2.SetActive(true);
+                displayStats2.ShowInfo(selectedUnit.GetComponent<Stats>(), navMap[CurrYIndex][CurrXIndex].name);
             }
+
+            isPreviewOn = true;
         }
     }
 
-    private void hideUnitData()
+    private void previewOff()
     {
         string unitTag = selectedUnit.tag;
 
         if (unitTag == "P1")
         {
-            playerOneStats.GetComponent<DisplayStats>().ClearInfo();
-            playerOneStats.SetActive(false);
+            displayStats1.ClearInfo();
+            StatsWindow1.SetActive(false);
         }
         else
         {
-            playerTwoStats.GetComponent<DisplayStats>().ClearInfo();
-            playerTwoStats.SetActive(false);
+            displayStats2.ClearInfo();
+            StatsWindow2.SetActive(false);
         }
+
+        isPreviewOn = false;
 
         selectedUnit = DummyObject;
         unitMaxMove = 0;
@@ -559,52 +546,32 @@ public class Cursor : MonoBehaviour
 
     private void checkAttackRange(List<Tile> tiles)
     {
-        foreach (Tile t in tiles)
+        foreach (Tile tile in tiles)
         {
-            if (t.UnitOnTile != null && t.UnitOnTile.tag != playerTurn)
+            if (tile.UnitOnTile != null && tile.UnitOnTile.tag != playerTurn)
             {
                 canAttack = true;
-                enemyTile = t;
+                enemyTile = tile;
+                showUnitStats(tile.UnitOnTile);
+                break;
             }
             else
             {
                 canAttack = false;
                 enemyTile = null;
+                hideUnitStats("enemy");
             }
         }
     }
 
-    IEnumerator Notify()
+    private void refreshATKRange()
     {
-        if (playerTurn == "P1")
+        if (rangeList.Count > 0)
         {
-            playerOneNoti1.SetActive(true);
-            yield return new WaitForSeconds(2);
-            playerOneNoti1.SetActive(false);
-        }
-        else
-        {
-            playerTwoNoti1.SetActive(true);
-            yield return new WaitForSeconds(2);
-            playerTwoNoti1.SetActive(false);
-        }
-    }
-
-    private void SwitchTurn()
-    {
-        if (playerTurn == "P1")
-        {
-            playerTurn = "P2";
-            playerTwoBorder.SetActive(true);
-            playerTwoBorder.GetComponentInChildren<Image>().color = Color.yellow;
-            playerOneBorder.SetActive(false);
-        }
-        else
-        {
-            playerTurn = "P1";
-            playerOneBorder.SetActive(true);
-            playerOneBorder.GetComponentInChildren<Image>().color = Color.yellow;
-            playerTwoBorder.SetActive(false);
+            foreach (Tile tile in rangeList)
+            {
+                tile.unitLooking = false;
+            }
         }
     }
 
@@ -655,7 +622,7 @@ public class Cursor : MonoBehaviour
             CurrXIndex++;
         }
 
-        if (gameState == "prep")
+        if (gameState == "Prep")
         {
             if (playerTurn == "P1")
             {
@@ -714,21 +681,33 @@ public class Cursor : MonoBehaviour
 
     public void SetGameState(string state) { gameState = state; }
 
-    public void SetPlayerTurn(string turn) 
-    { 
-        playerTurn = turn;
+    public void SetPlayerTurn(string turn) { playerTurn = turn; }
 
+    private void changeText(string diKeys, string space, string aKey, string sKey)
+    {
+        DiKeysText.text = diKeys;
+        SpacebarText.text = space;
+        AKeyText.text = aKey;
+        SKeyText.text = sKey;
+    }
+
+    IEnumerator Notify()
+    {
         if (playerTurn == "P1")
         {
-            playerOneBorder.SetActive(true);
-            playerOneBorder.GetComponentInChildren<Image>().color = Color.yellow;
-            playerTwoBorder.SetActive(false);
+            moveDisabled = true;
+            NotifWindow1.SetActive(true);
+            yield return new WaitForSeconds(2);
+            NotifWindow1.SetActive(false);
+            moveDisabled = false;
         }
         else
         {
-            playerTwoBorder.SetActive(true);
-            playerTwoBorder.GetComponentInChildren<Image>().color = Color.yellow;
-            playerOneBorder.SetActive(false);
+            moveDisabled = true;
+            NotifWindow2.SetActive(true);
+            yield return new WaitForSeconds(2);
+            NotifWindow2.SetActive(false);
+            moveDisabled = false;
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameMaster : MonoBehaviour
 {
@@ -16,20 +17,15 @@ public class GameMaster : MonoBehaviour
 
     private string playerToGoFirst;
     private string playerTurn;
-    private int aIndex;
-    private int bIndex;
-    private string gameState;
+    private int index1 = 0;
+    private int index2 = 0;
+    private string gameState = "Prep";
     private int unitCount;
     private int unitsPlaced;
     
     private void Awake()
-    {
-        aIndex = 0;
-        bIndex = 0;
-        gameState = "prep";
+    {     
         unitCount = P1UnitList.Count + P2UnitList.Count;
-        unitsPlaced = 0;
-
         Cursor.SetGameState(gameState);
 
         int diceRoll = Random.Range(1, 7);
@@ -41,8 +37,8 @@ public class GameMaster : MonoBehaviour
             Cursor.SetPosition(3, 7);
             Cursor.SetGameState(gameState);
             Cursor.SetPlayerTurn(playerTurn);
-            Cursor.SendUnit(P1UnitList[aIndex]);
-            aIndex++;
+            Cursor.SendUnit(P1UnitList[index1]);
+            index1++;
         }
         else
         {
@@ -51,8 +47,32 @@ public class GameMaster : MonoBehaviour
             Cursor.SetPosition(4, 0);
             Cursor.SetGameState(gameState);
             Cursor.SetPlayerTurn(playerTurn);
-            Cursor.SendUnit(P2UnitList[bIndex]);
-            bIndex++;
+            Cursor.SendUnit(P2UnitList[index2]);
+            index2++;
+        }
+    }
+
+    private void Update()
+    {
+        for (int i = 0; i < P1UnitList.Count; i++)
+        {
+            if (P1UnitList[i] == null)
+            {
+                P1UnitList.Remove(P1UnitList[i]);
+            }
+        }
+
+        for (int i = 0; i < P2UnitList.Count; i++)
+        {
+            if (P2UnitList[i] == null)
+            {
+                P2UnitList.Remove(P2UnitList[i]);
+            }
+        }
+
+        if (P1UnitList.Count <= 0 || P2UnitList.Count <= 0)
+        {
+            SceneManager.LoadScene(4);
         }
     }
 
@@ -60,30 +80,30 @@ public class GameMaster : MonoBehaviour
     {
         if (playerTurn == "P1")
         {
-            if (bIndex < P2UnitList.Count)
+            if (index2 < P2UnitList.Count)
             {
-                Cursor.SendUnit(P2UnitList[bIndex]);
+                Cursor.SendUnit(P2UnitList[index2]);
                 Cursor.SetPosition(4, 0);
                 playerTurn = "P2";
                 Cursor.SetPlayerTurn(playerTurn);
-                bIndex++;
+                index2++;
             }
         }
         else
         {
-            if (aIndex < P1UnitList.Count)
+            if (index1 < P1UnitList.Count)
             {
-                Cursor.SendUnit(P1UnitList[aIndex]);
+                Cursor.SendUnit(P1UnitList[index1]);
                 Cursor.SetPosition(3, 7);
                 playerTurn = "P1";
                 Cursor.SetPlayerTurn(playerTurn);
-                aIndex++;
+                index1++;
             }
         }
 
         if (unitsPlaced >= unitCount)
         {
-            gameState = "play";
+            gameState = "Play";
             playerTurn = playerToGoFirst;
             Cursor.SetPlayerTurn(playerToGoFirst);
             Cursor.SetGameState(gameState);

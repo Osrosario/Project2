@@ -221,90 +221,6 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: L_Arrow
-      rect:
-        serializedVersion: 2
-        x: 539
-        y: 30
-        width: 21
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1065da9d04d1efe4583a537279f36721
-      internalID: 1119712491
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: R_Arrow
-      rect:
-        serializedVersion: 2
-        x: 586
-        y: 30
-        width: 20
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4664bd1619f3176468f521d66cd7aa7d
-      internalID: 1891743325
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: DOWN_Arrow
-      rect:
-        serializedVersion: 2
-        x: 562
-        y: 30
-        width: 21
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0a6649d8ef90fc1479ca2f05a57d5887
-      internalID: 1149941831
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UP_Arrow
-      rect:
-        serializedVersion: 2
-        x: 562
-        y: 53
-        width: 21
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 59228b48941ec624a83b4879222283b9
-      internalID: 733746280
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -321,6 +237,7 @@ TextureImporter:
       Z_Key: 1326240072
       Di_Keys: 936913136
       UP_Arrow: 1231527366
+      master_0: 1939092589
       Space_Key: -1461426521
       A_Key: -621039040
       DOWN_Arrow: 1463398347

@@ -1094,6 +1094,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aa9d7538fa9c0140875fec48c0b0ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UnitImage: {fileID: 21300000, guid: 945ae298f9ccb2447b3db9251bf985a9, type: 3}
   Class: Archer
   HP: 4
   ATK: 2

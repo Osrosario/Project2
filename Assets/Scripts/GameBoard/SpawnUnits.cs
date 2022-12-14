@@ -45,6 +45,7 @@ public class SpawnUnits : MonoBehaviour
 
             transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1f);
             thisUnit.tag = "P1";
+            thisUnit.GetComponent<Stats>().SetID(i);
             thisUnit.GetComponent<Stats>().SetFace("North");
             GameMaster.AddToP1(thisUnit);
         }
@@ -76,6 +77,7 @@ public class SpawnUnits : MonoBehaviour
 
             transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1f);
             thisUnit.tag = "P2";
+            thisUnit.GetComponent<Stats>().SetID(i);
             thisUnit.GetComponent<Stats>().SetFace("South");
             GameMaster.AddToP2(thisUnit);
         }

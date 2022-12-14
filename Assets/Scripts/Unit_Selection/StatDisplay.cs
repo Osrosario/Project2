@@ -11,6 +11,7 @@ public class StatDisplay : MonoBehaviour
 
     [Header("Text of Values from Stat Window")]
     public TMP_Text UnitClass;
+    public Image UnitImage;
     public TMP_Text HPValue;
     public TMP_Text ATKValue;
     public TMP_Text ATKRangeValue;
@@ -37,6 +38,7 @@ public class StatDisplay : MonoBehaviour
     public void DisplayStats()
     {
         UnitClass.text = unitStats.GetClass();
+        UnitImage.sprite = unitStats.GetImage();
         HPValue.text = unitStats.GetHP().ToString();
         ATKValue.text = unitStats.GetATK().ToString();
         ATKRangeValue.text = unitStats.GetATKRange().ToString();

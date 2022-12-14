@@ -35,6 +35,6 @@ public class MapData : MonoBehaviour
         HillCount.text = "x" + hillCount.ToString();
         MountainCount.text = "x" + mountainCount.ToString();
 
-        SelectionMaster.LoadThisScene(1);
+        SelectionMaster.LoadThisScene(3);
     }
 }

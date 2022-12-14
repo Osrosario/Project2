@@ -12296,7 +12296,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player 1 Goes First
+  m_text: Player 1's Turn
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 390a2155b7f0c6e44854e583d37a7480, type: 2}
   m_sharedMaterial: {fileID: 3205880514858805627, guid: 390a2155b7f0c6e44854e583d37a7480, type: 2}
@@ -15152,7 +15152,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.22054112, g: 0.5240718, b: 0.7924528, a: 0}
+  m_BackGroundColor: {r: 0, g: 0.51912624, b: 0.9716981, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -17349,7 +17349,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278242604
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -18021,7 +18021,7 @@ MonoBehaviour:
   m_fontSize: 24
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -22835,7 +22835,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1479118213
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25905,7 +25905,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player 2 Goes First
+  m_text: Player 2's Turn
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 390a2155b7f0c6e44854e583d37a7480, type: 2}
   m_sharedMaterial: {fileID: 3205880514858805627, guid: 390a2155b7f0c6e44854e583d37a7480, type: 2}
@@ -29159,10 +29159,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NavMap: {fileID: 761069058}
   GameMaster: {fileID: 2045211134}
-  playerOneStats: {fileID: 1018110212}
-  playerTwoStats: {fileID: 45877963}
-  playerOneNoti1: {fileID: 1403775062}
-  playerTwoNoti1: {fileID: 126693937}
+  StatsWindow1: {fileID: 1018110212}
+  StatsWindow2: {fileID: 45877963}
+  NotifWindow1: {fileID: 1403775062}
+  NotifWindow2: {fileID: 126693937}
   playerOneBorder: {fileID: 1248509156}
   playerTwoBorder: {fileID: 634161804}
   DummyObject: {fileID: 701618060}
@@ -29785,7 +29785,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278242604
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -30628,7 +30628,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1979057266
 RectTransform:
   m_ObjectHideFlags: 0

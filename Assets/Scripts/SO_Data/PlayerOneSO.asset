@@ -12,10 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faf6c01d1b6c2774ea64f332f1eec88f, type: 3}
   m_Name: PlayerOneSO
   m_EditorClassIdentifier: 
-  unitList:
-  - {fileID: 6603909357406751286, guid: 6689af010b97bac479d75b75976a2f6b, type: 3}
-  - {fileID: 6603909357406751286, guid: 6689af010b97bac479d75b75976a2f6b, type: 3}
-  - {fileID: 2804213520284688462, guid: 171b78f1997278444a32dda8c580f875, type: 3}
-  - {fileID: 2804213520284688462, guid: 171b78f1997278444a32dda8c580f875, type: 3}
-  - {fileID: 4695193240356206230, guid: 16db237c4ec1dbc4096ea8a35ec4de04, type: 3}
-  - {fileID: 4695193240356206230, guid: 16db237c4ec1dbc4096ea8a35ec4de04, type: 3}
+  unitList: []
